@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFuture>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,7 +18,22 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void UpdateHeaderText(QString text);
+    void keyPressEvent(QKeyEvent* event) override;
+
+signals:
+    void UpdateHeaderRequest(QString text);
+
 private:
     Ui::MainWindow *ui;
+    int currentState;
+
+    // Handles state for Generating Map
+    void GenerateMap();
+    QPointF mapPoint;
+    bool mapClicked;
+    bool escClicked;
+    QFuture<void> mapFuture;
 };
 #endif // MAINWINDOW_H
