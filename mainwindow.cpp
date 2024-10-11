@@ -26,7 +26,31 @@ MainWindow::MainWindow(QWidget *parent)
         mapClicked = true;
     });
 
-    ui->board->ReadLocationFile("rules/locations.txt");
+    connect(ui->pb_ReloadMap, &QPushButton::clicked, this, [this](){
+        ui->board->ReadLocationFile("rules/locations.txt");
+        ui->board->ReadTravelFile("rules/taxis.txt", TRAVEL_TYPE::TAXI);
+        ui->board->ReadTravelFile("rules/buses.txt", TRAVEL_TYPE::BUS);
+        ui->board->ReadTravelFile("rules/underground.txt", TRAVEL_TYPE::UNDERGROUND);
+        ui->board->ReadTravelFile("rules/ferrys.txt", TRAVEL_TYPE::FERRY);
+        ui->board->repaint();
+    });
+    ui->pb_ReloadMap->click();
+
+    connect(ui->cb_Stations, &QCheckBox::clicked, [this](bool checked) {
+        ui->board->UpdateDrawCheck(checked, DRAW_OBJ::STATION);
+    });
+    connect(ui->cb_Taxis, &QCheckBox::clicked, [this](bool checked) {
+        ui->board->UpdateDrawCheck(checked, DRAW_OBJ::TAXI);
+    });
+    connect(ui->cb_Buses, &QCheckBox::clicked, [this](bool checked) {
+        ui->board->UpdateDrawCheck(checked, DRAW_OBJ::BUS);
+    });
+    connect(ui->cb_Highways, &QCheckBox::clicked, [this](bool checked) {
+        ui->board->UpdateDrawCheck(checked, DRAW_OBJ::UNDERGROUND);
+    });
+    connect(ui->cb_Ferry, &QCheckBox::clicked, [this](bool checked) {
+        ui->board->UpdateDrawCheck(checked, DRAW_OBJ::FERRY);
+    });
 }
 
 MainWindow::~MainWindow()
@@ -57,10 +81,6 @@ void MainWindow::GenerateMap() {
         std::vector<QPointF> points;
         points.reserve(NUM_POINTS);
         for (int i = 1; i <= NUM_POINTS; i++) {
-            if (i == 128) { // Version of board used has no 128th square
-                points.push_back({1.1, 1.1});
-                continue;
-            }
             emit UpdateHeaderRequest(QString("Select Point ").append(QString::number(i)).append("  (Esc to cancel)"));
             mapClicked = false;
             while (!mapClicked && !escClicked) {

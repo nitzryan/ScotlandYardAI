@@ -34,6 +34,9 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
       <property name="text">
        <string/>
       </property>
@@ -68,11 +71,50 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="pb_ReloadMap">
         <property name="text">
-         <string>PushButton</string>
+         <string>Reload Map</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QCheckBox" name="cb_Stations">
+          <property name="text">
+           <string>Stations</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cb_Taxis">
+          <property name="text">
+           <string>Taxis</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cb_Buses">
+          <property name="text">
+           <string>Buses</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cb_Highways">
+          <property name="text">
+           <string>Highways</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="cb_Ferry">
+          <property name="text">
+           <string>Ferry</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
