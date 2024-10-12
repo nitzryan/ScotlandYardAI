@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QFuture>
 
+#include "Agents/MoveGenerator.h"
+#include "Agents/GameManager.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -29,6 +32,8 @@ private:
     Ui::MainWindow *ui;
     int currentState;
 
+    MoveGenerator* moveGenerator;
+    GameManager* gameManager;
     // Handles state for Generating Map
     void GenerateMap();
     QPointF mapPoint;

@@ -8,7 +8,8 @@
 #include <QThread>
 #include <QtConcurrent/QtConcurrent>
 
-const int NUM_POINTS = 199;
+#include "Shared.h"
+
 const int STATE_GENERATING_MAP = 1;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -36,6 +37,13 @@ MainWindow::MainWindow(QWidget *parent)
     });
     ui->pb_ReloadMap->click();
 
+    moveGenerator = new MoveGenerator(ui->board->GetTaxiMatrix(),
+                                ui->board->GetBusMatrix(),
+                                ui->board->GetUndergroundMatrix(),
+                                ui->board->GetFerryMatrix());
+
+    gameManager = new GameManager(moveGenerator);
+
     connect(ui->cb_Stations, &QCheckBox::clicked, [this](bool checked) {
         ui->board->UpdateDrawCheck(checked, DRAW_OBJ::STATION);
     });
@@ -51,11 +59,16 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->cb_Ferry, &QCheckBox::clicked, [this](bool checked) {
         ui->board->UpdateDrawCheck(checked, DRAW_OBJ::FERRY);
     });
+
+    connect(gameManager, &GameManager::GamestateUpdated, ui->board, &GameBoard::GamestateUpdated);
+    connect(ui->pb_StartGame, &QPushButton::clicked, gameManager, &GameManager::SimulateGame);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete moveGenerator;
+    delete gameManager;
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event) {

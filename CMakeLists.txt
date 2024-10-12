@@ -27,6 +27,13 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         resources.qrc
         GameBoard.h GameBoard.cpp
+        Game.h Game.cpp
+        Agents/DetectiveAi.cpp Agents/DetectiveAi.h Agents/FugitiveAi.cpp Agents/FugitiveAi.h Agents/MoveGenerator.cpp Agents/MoveGenerator.h
+        Shared.h
+        SparseSquareMatrix.h SparseSquareMatrix.cpp
+        Agents/GameManager.h Agents/GameManager.cpp
+
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ScotlandYardAi APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

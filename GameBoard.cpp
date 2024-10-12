@@ -2,7 +2,7 @@
 #include <QPainter>
 #include <fstream>
 
-const int NUM_POINTS = 199;
+const char INVALID_SNAPSHOT_TURN = 100;
 
 GameBoard::GameBoard(QWidget *parent) : QLabel(parent) {
     points.reserve(NUM_POINTS);
@@ -11,6 +11,8 @@ GameBoard::GameBoard(QWidget *parent) : QLabel(parent) {
     drawBus = false;
     drawUnderground = false;
     drawFerry = false;
+
+    snapshot.turn = INVALID_SNAPSHOT_TURN;
 }
 
 bool GameBoard::ReadLocationFile(const char *filename)
@@ -95,6 +97,12 @@ void GameBoard::UpdateDrawCheck(bool checked, DRAW_OBJ obj)
         drawFerry = checked;
         break;
     }
+    repaint();
+}
+
+void GameBoard::GamestateUpdated(GameSnapshot s)
+{
+    snapshot = s;
     repaint();
 }
 
@@ -188,6 +196,32 @@ void GameBoard::paintEvent(QPaintEvent* event) {
             p2.setX(p2.x() * w);
             p2.setY(p2.y() * h);
             painter.drawLine(p1, p2);
+        }
+    }
+
+    // Draw Gamestate
+    QBrush brush;
+    brush.setStyle(Qt::SolidPattern);
+    if (snapshot.turn != INVALID_SNAPSHOT_TURN) {
+        pen.setColor(Qt::white);
+        brush.setColor(Qt::white);
+        painter.setPen(pen);
+        painter.setBrush(brush);
+
+        QPointF& p = points[snapshot.fugSquare - 1];
+        painter.drawEllipse(QPoint(p.x() * w, p.y() * h), r, r);
+    }
+
+    r *= 0.9;
+    if (snapshot.turn != INVALID_SNAPSHOT_TURN) {
+        pen.setColor(QColor(128,255,0));
+        brush.setColor(QColor(128,255,0));
+        painter.setPen(pen);
+        painter.setBrush(brush);
+
+        for (size_t i = 0; i < NUM_DETECTIVES; i++) {
+            QPointF& p = points[snapshot.detSquare[i] - 1];
+            painter.drawEllipse(QPoint(p.x() * w, p.y() * h), r, r);
         }
     }
 }
