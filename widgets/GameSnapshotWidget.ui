@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GameSnapshotWidget</class>
+ <widget class="QWidget" name="GameSnapshotWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1226</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Game State</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Turn Count</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="lbl_TurnCount">
+       <property name="text">
+        <string>#</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="lbl_CurrentTurnSide">
+     <property name="text">
+      <string>Current Turn</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="FugitiveSnapshot" name="fugitiveSnapshot" native="true"/>
+     </item>
+     <item>
+      <widget class="DetectiveSnapshot" name="detectiveSnapshot1" native="true"/>
+     </item>
+     <item>
+      <widget class="DetectiveSnapshot" name="detectiveSnapshot2" native="true"/>
+     </item>
+     <item>
+      <widget class="DetectiveSnapshot" name="detectiveSnapshot3" native="true"/>
+     </item>
+     <item>
+      <widget class="DetectiveSnapshot" name="detectiveSnapshot4" native="true"/>
+     </item>
+     <item>
+      <widget class="DetectiveSnapshot" name="detectiveSnapshot5" native="true"/>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DetectiveSnapshot</class>
+   <extends>QWidget</extends>
+   <header>widgets/DetectiveSnapshot.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FugitiveSnapshot</class>
+   <extends>QWidget</extends>
+   <header>widgets/FugitiveSnapshot.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

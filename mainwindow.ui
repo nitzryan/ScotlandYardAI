@@ -53,7 +53,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="gamestateWidget" native="true"/>
+       <widget class="GameSnapshotWidget" name="gamestateWidget" native="true"/>
       </item>
       <item>
        <spacer name="verticalSpacer">
@@ -193,6 +193,12 @@
    <class>ScoreWidget</class>
    <extends>QWidget</extends>
    <header>widgets/ScoreWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GameSnapshotWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/GameSnapshotWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

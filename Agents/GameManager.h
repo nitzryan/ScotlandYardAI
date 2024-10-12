@@ -2,6 +2,7 @@
 #define GAMEMANAGER_H
 
 #include <QObject>
+#include <QFuture>
 
 #include "DetectiveAi.h"
 #include "FugitiveAi.h"
@@ -25,6 +26,8 @@ private:
     FugitiveAi fugitive;
     const MoveGenerator* moveGenerator;
     Game game;
+
+    QFuture<void> gameFuture;
 };
 
 #endif // GAMEMANAGER_H

@@ -33,6 +33,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         SparseSquareMatrix.h SparseSquareMatrix.cpp
         Agents/GameManager.h Agents/GameManager.cpp
         widgets/ScoreWidget.h widgets/ScoreWidget.cpp
+        widgets/GameSnapshotWidget.h widgets/GameSnapshotWidget.cpp widgets/GameSnapshotWidget.ui
+        widgets/DetectiveSnapshot.h widgets/DetectiveSnapshot.cpp widgets/DetectiveSnapshot.ui
+        widgets/FugitiveSnapshot.h widgets/FugitiveSnapshot.cpp widgets/FugitiveSnapshot.ui
 
 
     )
