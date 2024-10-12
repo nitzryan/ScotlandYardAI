@@ -26,12 +26,13 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         resources.qrc
-        GameBoard.h GameBoard.cpp
+        widgets/GameBoard.h widgets/GameBoard.cpp
         Game.h Game.cpp
         Agents/DetectiveAi.cpp Agents/DetectiveAi.h Agents/FugitiveAi.cpp Agents/FugitiveAi.h Agents/MoveGenerator.cpp Agents/MoveGenerator.h
         Shared.h
         SparseSquareMatrix.h SparseSquareMatrix.cpp
         Agents/GameManager.h Agents/GameManager.cpp
+        widgets/ScoreWidget.h widgets/ScoreWidget.cpp
 
 
     )

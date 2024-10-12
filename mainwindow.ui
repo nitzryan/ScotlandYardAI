@@ -14,9 +14,15 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QVBoxLayout" name="leftColumn"/>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="mainColumn">
+      <item>
+       <widget class="ScoreWidget" name="scoreWidget" native="true"/>
+      </item>
       <item>
        <widget class="QLabel" name="lbl_Header">
         <property name="text">
@@ -24,104 +30,153 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="GameBoard" name="board">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="autoFillBackground">
+         <bool>true</bool>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="pixmap">
+         <pixmap resource="resources.qrc">:/img/board.jpg</pixmap>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="gamestateWidget" native="true"/>
+      </item>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>20</width>
+          <height>557</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="pb_GenerateMap">
+          <property name="text">
+           <string>Generate Map</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pb_ReloadMap">
+          <property name="text">
+           <string>Reload Map</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pb_StartGame">
+          <property name="text">
+           <string>Start Game</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="QCheckBox" name="cb_FugitiveAlways">
+            <property name="text">
+             <string>Fugutive Always</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_FugitiveScore">
+            <property name="text">
+             <string>Fugutive Score</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_FugitiveCards">
+            <property name="text">
+             <string>Fugitive Cards</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_DetectiveScore">
+            <property name="text">
+             <string>Detective Score</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_DetectiveCards">
+            <property name="text">
+             <string>Detective Cards</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QCheckBox" name="cb_Stations">
+            <property name="text">
+             <string>Stations</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_Taxis">
+            <property name="text">
+             <string>Taxis</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_Buses">
+            <property name="text">
+             <string>Buses</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_Highways">
+            <property name="text">
+             <string>Highways</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cb_Ferry">
+            <property name="text">
+             <string>Ferry</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
      </layout>
     </item>
     <item>
-     <widget class="GameBoard" name="board">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="autoFillBackground">
-       <bool>true</bool>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="pixmap">
-       <pixmap resource="resources.qrc">:/img/board.jpg</pixmap>
-      </property>
-      <property name="scaledContents">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>557</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QVBoxLayout" name="rightColumn">
       <item>
-       <widget class="QPushButton" name="pb_GenerateMap">
-        <property name="text">
-         <string>Generate Map</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pb_ReloadMap">
-        <property name="text">
-         <string>Reload Map</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pb_StartGame">
-        <property name="text">
-         <string>Start Game</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <item>
-         <widget class="QCheckBox" name="cb_Stations">
-          <property name="text">
-           <string>Stations</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="cb_Taxis">
-          <property name="text">
-           <string>Taxis</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="cb_Buses">
-          <property name="text">
-           <string>Buses</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="cb_Highways">
-          <property name="text">
-           <string>Highways</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="cb_Ferry">
-          <property name="text">
-           <string>Ferry</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
+       <widget class="QWidget" name="moveHistory" native="true"/>
       </item>
      </layout>
     </item>
@@ -132,7 +187,13 @@
   <customwidget>
    <class>GameBoard</class>
    <extends>QLabel</extends>
-   <header>GameBoard.h</header>
+   <header>widgets/GameBoard.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ScoreWidget</class>
+   <extends>QWidget</extends>
+   <header>widgets/ScoreWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
