@@ -176,7 +176,7 @@
     <item>
      <layout class="QVBoxLayout" name="rightColumn">
       <item>
-       <widget class="QWidget" name="moveHistory" native="true"/>
+       <widget class="GameHistory" name="gameHistory" native="true"/>
       </item>
      </layout>
     </item>
@@ -199,6 +199,12 @@
    <class>GameSnapshotWidget</class>
    <extends>QWidget</extends>
    <header>widgets/GameSnapshotWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GameHistory</class>
+   <extends>QWidget</extends>
+   <header>widgets/GameHistory.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

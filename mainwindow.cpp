@@ -62,8 +62,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(gameManager, &GameManager::GamestateUpdated, ui->board, &GameBoard::GamestateUpdated);
     connect(gameManager, &GameManager::GamestateUpdated, ui->gamestateWidget, &GameSnapshotWidget::UpdateSnapshot);
+    connect(gameManager, &GameManager::GamestateUpdated, ui->gameHistory, &GameHistory::AddSnapshot);
     connect(ui->pb_StartGame, &QPushButton::clicked, gameManager, &GameManager::SimulateGame);
     connect(ui->cb_FugitiveAlways, &QCheckBox::clicked, ui->gamestateWidget, &GameSnapshotWidget::SetShowX);
+    connect(ui->cb_FugitiveAlways, &QCheckBox::clicked, ui->gameHistory, &GameHistory::ShowFugitiveLocation);
+
+    connect(gameManager, &GameManager::StartGame, ui->gameHistory, &GameHistory::ClearGame);
+
+    connect(ui->gameHistory, &GameHistory::SnapshotSelected, ui->board, &GameBoard::GamestateUpdated);
+    connect(ui->gameHistory, &GameHistory::SnapshotSelected, ui->gamestateWidget, &GameSnapshotWidget::UpdateSnapshot);
 }
 
 MainWindow::~MainWindow()

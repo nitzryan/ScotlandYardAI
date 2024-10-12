@@ -66,6 +66,7 @@ void Game::MakeFugitiveMove(GameMove move)
     currentState.fugDoubles -= (move.type & (unsigned char)GameMovesType::DOUBLE) != 0;
     currentState.fugMysteries -= (move.type & (unsigned char)GameMovesType::MYSTERY) != 0;
     currentState.turn++;
+    currentState.wasFugitiveMove = true;
 
     detectivesWon = CheckForDetectiveWin(currentState);
     fugitiveWon = CheckForFugitiveWin(currentState);
@@ -105,6 +106,7 @@ void Game::MakeDetectiveMoves(std::vector<GameMove> moves)
 
     detectivesWon = CheckForDetectiveWin(currentState);
     fugitiveWon = CheckForFugitiveWin(currentState);
+    currentState.wasFugitiveMove = false;
 
     gameStates.push_back(currentState);
 }

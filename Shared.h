@@ -39,6 +39,7 @@ struct GameSnapshot {
     unsigned char fugMysteries;
     unsigned char fugMove;
     bool isFugitiveMove;
+    bool wasFugitiveMove;
 };
 
 enum class GameMovesType : unsigned char {

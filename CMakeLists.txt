@@ -36,6 +36,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         widgets/GameSnapshotWidget.h widgets/GameSnapshotWidget.cpp widgets/GameSnapshotWidget.ui
         widgets/DetectiveSnapshot.h widgets/DetectiveSnapshot.cpp widgets/DetectiveSnapshot.ui
         widgets/FugitiveSnapshot.h widgets/FugitiveSnapshot.cpp widgets/FugitiveSnapshot.ui
+        widgets/GameHistory.h widgets/GameHistory.cpp widgets/GameHistory.ui
+        widgets/GameHistoryMove.h widgets/GameHistoryMove.cpp widgets/GameHistoryMove.ui
 
 
     )
