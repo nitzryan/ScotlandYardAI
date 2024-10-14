@@ -14,6 +14,8 @@ public:
     GameSnapshot GetCurrentState() const;
     bool DetectivesWon() const;
     bool FugitiveWon() const;
+    float GetDetectiveScore() const;
+    float GetFugitiveScore() const;
 private:
     std::vector<GameSnapshot> gameStates;
     GameSnapshot currentState;

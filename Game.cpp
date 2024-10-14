@@ -126,3 +126,23 @@ bool Game::FugitiveWon() const
 {
     return fugitiveWon;
 }
+
+float Game::GetDetectiveScore() const
+{
+    if (detectivesWon)
+        return 1;
+    else if (fugitiveWon)
+        return 0;
+
+    return 0.55;
+}
+
+float Game::GetFugitiveScore() const
+{
+    if (detectivesWon)
+        return 1;
+    else if (fugitiveWon)
+        return 0;
+
+    return 0.45;
+}

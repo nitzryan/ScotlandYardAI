@@ -19,6 +19,7 @@ public slots:
     void SimulateGame();
 signals:
     void GamestateUpdated(GameSnapshot snapshot);
+    void ScoreUpdated(float detectiveScore, float fugitiveScore);
     void StartGame();
 
 private:

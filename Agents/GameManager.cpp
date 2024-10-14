@@ -29,6 +29,7 @@ void GameManager::SimulateGame()
             }
 
             emit GamestateUpdated(game.GetCurrentState());
+            emit ScoreUpdated(game.GetDetectiveScore(), game.GetFugitiveScore());
             std::this_thread::sleep_for(std::chrono::milliseconds(200));
         }
 

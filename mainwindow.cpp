@@ -68,6 +68,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->cb_FugitiveAlways, &QCheckBox::clicked, ui->gameHistory, &GameHistory::ShowFugitiveLocation);
 
     connect(gameManager, &GameManager::StartGame, ui->gameHistory, &GameHistory::ClearGame);
+    connect(gameManager, &GameManager::ScoreUpdated, ui->scoreWidget, &ScoreWidget::UpdateWinChance);
 
     connect(ui->gameHistory, &GameHistory::SnapshotSelected, ui->board, &GameBoard::GamestateUpdated);
     connect(ui->gameHistory, &GameHistory::SnapshotSelected, ui->gamestateWidget, &GameSnapshotWidget::UpdateSnapshot);
