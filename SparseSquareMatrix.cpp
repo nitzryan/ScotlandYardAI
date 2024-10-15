@@ -73,7 +73,7 @@ int SparseSquareMatrix::GetRowIdx(unsigned char row, std::size_t start, std::siz
     if (start == end) {
         const matrixVal& val = vals[start];
         if (val.row == row)
-            return start;
+            return (int)start;
         return -1;
     } else if ((start + 1) == end) {
         int v1 = GetRowIdx(row, start, start);

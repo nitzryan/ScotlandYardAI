@@ -38,8 +38,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         widgets/FugitiveSnapshot.h widgets/FugitiveSnapshot.cpp widgets/FugitiveSnapshot.ui
         widgets/GameHistory.h widgets/GameHistory.cpp widgets/GameHistory.ui
         widgets/GameHistoryMove.h widgets/GameHistoryMove.cpp widgets/GameHistoryMove.ui
-
-
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ScotlandYardAi APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

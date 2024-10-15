@@ -134,7 +134,7 @@ float Game::GetDetectiveScore() const
     else if (fugitiveWon)
         return 0;
 
-    return 0.55;
+    return 0.55f;
 }
 
 float Game::GetFugitiveScore() const
@@ -144,5 +144,5 @@ float Game::GetFugitiveScore() const
     else if (fugitiveWon)
         return 0;
 
-    return 0.45;
+    return 0.45f;
 }

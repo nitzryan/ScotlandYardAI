@@ -21,6 +21,6 @@ GameMove FugitiveAi::GetMove(const MoveGenerator *moveGenerator, const GameSnaps
 
     std::random_device dev;
     std::mt19937 generator(dev());
-    std::uniform_int_distribution<int> r(0, possibleMoves.size() - 1);
+    std::uniform_int_distribution<int> r(0, (int)(possibleMoves.size() - 1));
     return possibleMoves.at(r(generator));
 }

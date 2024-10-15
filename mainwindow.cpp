@@ -44,19 +44,19 @@ MainWindow::MainWindow(QWidget *parent)
 
     gameManager = new GameManager(moveGenerator);
 
-    connect(ui->cb_Stations, &QCheckBox::clicked, [this](bool checked) {
+    connect(ui->cb_Stations, &QCheckBox::clicked, this, [this](bool checked) {
         ui->board->UpdateDrawCheck(checked, DRAW_OBJ::STATION);
     });
-    connect(ui->cb_Taxis, &QCheckBox::clicked, [this](bool checked) {
+    connect(ui->cb_Taxis, &QCheckBox::clicked, this, [this](bool checked) {
         ui->board->UpdateDrawCheck(checked, DRAW_OBJ::TAXI);
     });
-    connect(ui->cb_Buses, &QCheckBox::clicked, [this](bool checked) {
+    connect(ui->cb_Buses, &QCheckBox::clicked, this, [this](bool checked) {
         ui->board->UpdateDrawCheck(checked, DRAW_OBJ::BUS);
     });
-    connect(ui->cb_Highways, &QCheckBox::clicked, [this](bool checked) {
+    connect(ui->cb_Highways, &QCheckBox::clicked, this, [this](bool checked) {
         ui->board->UpdateDrawCheck(checked, DRAW_OBJ::UNDERGROUND);
     });
-    connect(ui->cb_Ferry, &QCheckBox::clicked, [this](bool checked) {
+    connect(ui->cb_Ferry, &QCheckBox::clicked, this, [this](bool checked) {
         ui->board->UpdateDrawCheck(checked, DRAW_OBJ::FERRY);
     });
 
