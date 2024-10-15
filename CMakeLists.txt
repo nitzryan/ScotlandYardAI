@@ -38,6 +38,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         widgets/FugitiveSnapshot.h widgets/FugitiveSnapshot.cpp widgets/FugitiveSnapshot.ui
         widgets/GameHistory.h widgets/GameHistory.cpp widgets/GameHistory.ui
         widgets/GameHistoryMove.h widgets/GameHistoryMove.cpp widgets/GameHistoryMove.ui
+        nn/ModelDataLoader.h nn/ModelDataLoader.cpp
+        nn/ModelSocket.h nn/ModelSocket.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET ScotlandYardAi APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -58,6 +60,10 @@ else()
 endif()
 
 target_link_libraries(ScotlandYardAi PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
+if(WIN32)
+  target_link_libraries(ScotlandYardAi PRIVATE wsock32 ws2_32)
+endif()
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

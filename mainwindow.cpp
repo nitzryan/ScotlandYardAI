@@ -10,6 +10,8 @@
 
 #include "Shared.h"
 
+#include "nn/ModelDataLoader.h"
+
 const int STATE_GENERATING_MAP = 1;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -72,6 +74,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->gameHistory, &GameHistory::SnapshotSelected, ui->board, &GameBoard::GamestateUpdated);
     connect(ui->gameHistory, &GameHistory::SnapshotSelected, ui->gamestateWidget, &GameSnapshotWidget::UpdateSnapshot);
+
+    ModelDataLoader dataLoader;
+    dataLoader.Train({}, {});
+    dataLoader.Train({}, {});
+    dataLoader.Train({}, {});
 }
 
 MainWindow::~MainWindow()
