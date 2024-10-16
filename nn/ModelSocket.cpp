@@ -1,8 +1,8 @@
 #include "ModelSocket.h"
 
-#include <stdio.h>
 #include <string>
 #include <QDebug>
+#include <fstream>
 
 // #pragma comment(lib, "Ws2_32.lib")
 
@@ -10,6 +10,11 @@ const int PORT=3456;
 const int BUFLEN = 256;
 
 ModelSocket::ModelSocket() {
+    // Spawn Python Server
+    std::string python_init_string = "start python3 nn/ModelSocket.py " + std::to_string(PORT);
+    int r = std::system(python_init_string.c_str());
+
+    // Connect to Python Server
     connectSocket = INVALID_SOCKET;
     int iResult;
     iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -61,23 +66,51 @@ ModelSocket::~ModelSocket()
     WSACleanup();
 }
 
-void ModelSocket::TrainModel(std::vector<std::vector<unsigned char> > gameMapPred, std::vector<bool> fugitivesWon)
+float ModelSocket::TrainModel(std::vector<std::vector<std::vector<unsigned char>> > gameMapPred, std::vector<std::vector<unsigned char>> fugitiveLocations, std::vector<bool> fugitivesWon, std::string name)
 {
     // Write data to file
+    std::string filename = "nn/models/" + name + ".txt";
+    std::ofstream file(filename.c_str(), std::ios::binary);
+    if (!file) {
+        return 10000000.f;
+    }
+    for (size_t i = 0; i < gameMapPred.size(); i++) {
+        for (size_t j = 0; j < gameMapPred[i].size(); j++) {
+            for (auto& c : gameMapPred[i][j]) {
+                file << c;
+            }
+            file << (unsigned char)253;
+            file << fugitiveLocations[i][j];
+            file << (unsigned char)254;
+        }
+        file << (unsigned char)255;
+    }
+    file.close();
 
     // Send to server file info
     int iResult;
-    const char* sendMsg = "Hello, Server";
+    std::string request = "train," + name;
+
+    if (request.length() > BUFLEN) {
+        return 1000000.f;
+    }
+    const char* sendMsg = request.c_str();
     iResult = send(connectSocket, sendMsg, (int)strlen(sendMsg), 0);
     if (iResult == SOCKET_ERROR) {
         qDebug() << "Send Msg Failed " << WSAGetLastError();
-        return;
+        return 10000.0f;
     }
 
     // Get back test loss from model
     char recvBuf[BUFLEN];
     iResult = recv(connectSocket, recvBuf, BUFLEN, 0);
     if (iResult > 0) {
-        qDebug() << recvBuf;
+        try {
+            return std::stof(recvBuf);
+        } catch (...) {
+            return 1000.0f;
+        }
     }
+
+    return 10000.0f;
 }

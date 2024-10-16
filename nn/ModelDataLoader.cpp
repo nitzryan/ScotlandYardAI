@@ -2,7 +2,7 @@
 #include "ModelSocket.h"
 #include <assert.h>
 
-const int MAP_PRED_FUG_SIZE = 8;
+const int MAP_PRED_FUG_SIZE = 9;
 const int MAP_PRED_DET_SIZE = 4;
 const int MAP_PRED_SIZE = MAP_PRED_FUG_SIZE + NUM_DETECTIVES * MAP_PRED_DET_SIZE;
 
@@ -17,6 +17,21 @@ std::vector<unsigned char> GenerateMapPredInput(const GameSnapshot& snapshot) {
     mapInputData[5] = snapshot.fugUndergrounds;
     mapInputData[6] = snapshot.fugMysteries;
     mapInputData[7] = snapshot.fugDoubles;
+
+    if (snapshot.turn == REVEAL_TURN_1 ||
+        snapshot.turn == REVEAL_TURN_2 ||
+        snapshot.turn == REVEAL_TURN_3 ||
+        snapshot.turn == FINAL_TURN ||
+        snapshot.fugSquare == snapshot.detSquare[0] ||
+        snapshot.fugSquare == snapshot.detSquare[1] ||
+        snapshot.fugSquare == snapshot.detSquare[2] ||
+        snapshot.fugSquare == snapshot.detSquare[3] ||
+        snapshot.fugSquare == snapshot.detSquare[4]) {
+
+        mapInputData[9] = snapshot.fugSquare;
+    } else {
+        mapInputData[9] = 240;
+    }
 
     for (int i = 0; i < NUM_DETECTIVES; i++) {
         mapInputData[MAP_PRED_FUG_SIZE + MAP_PRED_DET_SIZE * i] = snapshot.detSquare[i];
@@ -37,20 +52,28 @@ ModelDataLoader::~ModelDataLoader()
     delete socket;
 }
 
-void ModelDataLoader::Train(std::vector<std::vector<GameSnapshot> > games, std::vector<bool> fugitivesWon) const
+float ModelDataLoader::Train(std::vector<std::vector<GameSnapshot> > games, std::vector<bool> fugitivesWon, std::string name) const
 {
     assert(games.size() == fugitivesWon.size());
 
-    std::vector<std::vector<unsigned char>> gameMapSnapshots;
+    std::vector<std::vector<std::vector<unsigned char>>> gameMapSnapshots;
     gameMapSnapshots.reserve(games.size());
+    std::vector<std::vector<unsigned char>> fugitiveLocations;
+    fugitiveLocations.reserve(games.size());
+
     for (int i = 0; i < games.size(); i++) {
+        std::vector<std::vector<unsigned char>> singleGameSnapshots;
+        std::vector<unsigned char> singleGameLocations;
         for (int j = 0; j < games[i].size(); j++) {
             std::vector<unsigned char> gameStateMapPred = GenerateMapPredInput(games[i][j]);
-            gameMapSnapshots.push_back(gameStateMapPred);
+            singleGameSnapshots.push_back(gameStateMapPred);
+            singleGameLocations.push_back(games[i][j].fugSquare);
         }
+        gameMapSnapshots.push_back(singleGameSnapshots);
+        fugitiveLocations.push_back(singleGameLocations);
     }
 
-    socket->TrainModel(gameMapSnapshots, fugitivesWon);
+    return socket->TrainModel(gameMapSnapshots, fugitiveLocations, fugitivesWon, name);
 }
 
 // GameMove ModelDataLoader::GetFugitiveMove(const GameSnapshot &snapshot) const

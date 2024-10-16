@@ -3,6 +3,7 @@
 
 #include "Shared.h"
 #include <vector>
+#include <string>
 
 class ModelSocket;
 
@@ -11,7 +12,7 @@ class ModelDataLoader
 public:
     ModelDataLoader();
     ~ModelDataLoader();
-    void Train(std::vector<std::vector<GameSnapshot>> games, std::vector<bool> fugitivesWon) const;
+    float Train(std::vector<std::vector<GameSnapshot>> games, std::vector<bool> fugitivesWon, std::string name) const;
     // GameMove GetFugitiveMove(const GameSnapshot& snapshot) const;
     // std::vector<GameMove> GetDetectiveMoves(const GameSnapshot& snapshot) const;
 private:

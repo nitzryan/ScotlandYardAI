@@ -10,8 +10,6 @@
 
 #include "Shared.h"
 
-#include "nn/ModelDataLoader.h"
-
 const int STATE_GENERATING_MAP = 1;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -65,7 +63,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(gameManager, &GameManager::GamestateUpdated, ui->board, &GameBoard::GamestateUpdated);
     connect(gameManager, &GameManager::GamestateUpdated, ui->gamestateWidget, &GameSnapshotWidget::UpdateSnapshot);
     connect(gameManager, &GameManager::GamestateUpdated, ui->gameHistory, &GameHistory::AddSnapshot);
-    connect(ui->pb_StartGame, &QPushButton::clicked, gameManager, &GameManager::SimulateGame);
+    //connect(ui->pb_StartGame, &QPushButton::clicked, gameManager, &GameManager::SimulateGame);
+    connect(ui->pb_StartGame, &QPushButton::clicked, this, [this]() {
+        gameManager->SimulateGame(true, 250);
+    });
     connect(ui->cb_FugitiveAlways, &QCheckBox::clicked, ui->gamestateWidget, &GameSnapshotWidget::SetShowX);
     connect(ui->cb_FugitiveAlways, &QCheckBox::clicked, ui->gameHistory, &GameHistory::ShowFugitiveLocation);
 
@@ -75,10 +76,13 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->gameHistory, &GameHistory::SnapshotSelected, ui->board, &GameBoard::GamestateUpdated);
     connect(ui->gameHistory, &GameHistory::SnapshotSelected, ui->gamestateWidget, &GameSnapshotWidget::UpdateSnapshot);
 
-    ModelDataLoader dataLoader;
-    dataLoader.Train({}, {});
-    dataLoader.Train({}, {});
-    dataLoader.Train({}, {});
+    // Train Models
+    connect(ui->trainingWidget, &TrainingWidget::TrainingStarted, gameManager, &GameManager::TrainModel);
+    connect(gameManager, &GameManager::TrainingPercentUpdate, ui->trainingWidget, &TrainingWidget::TrainingPercentUpdate);
+    connect(gameManager, &GameManager::TrainingComplete, ui->trainingWidget, &TrainingWidget::TrainingComplete);
+
+    setWindowFlags(windowFlags() | Qt::Window | Qt::CustomizeWindowHint);
+    showMaximized();
 }
 
 MainWindow::~MainWindow()

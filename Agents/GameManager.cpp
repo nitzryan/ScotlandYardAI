@@ -9,16 +9,44 @@ GameManager::GameManager(const MoveGenerator* mg, QObject* parent) : QObject(par
     gameSimulating = false;
 }
 
-void GameManager::SimulateGame()
+void GameManager::TrainModel(std::string modelName, int generations, int gamesPerGeneration)
+{
+    for (int i = 0; i < generations; i++) {
+        std::vector<std::vector<GameSnapshot>> games;
+        std::vector<bool> fugitivesWon;
+        games.reserve(gamesPerGeneration);
+        fugitivesWon.reserve(gamesPerGeneration);
+        for (int j = 0; j < gamesPerGeneration; j++) {
+            while (gameSimulating) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+            SimulateGame(false, 0);
+            GameResult gameResult = gameFuture.result();
+            games.push_back(gameResult.snapshots);
+            fugitivesWon.push_back(gameResult.fugitiveWon);
+        }
+
+        float loss = dataLoader.Train(games, fugitivesWon, modelName + "_g" + std::to_string(i));
+        qDebug() << "Training Loss for Generation " << i + 1 << ": " << loss;
+        emit TrainingPercentUpdate((float)(i + 1) / generations);
+    }
+
+    emit TrainingComplete();
+}
+
+void GameManager::SimulateGame(bool shouldEmit, int thinkMs)
 {
     if (gameSimulating) {
         return;
     }
 
     gameSimulating = true;
-    emit StartGame();
 
-    gameFuture = QtConcurrent::run([this]() {
+    if (shouldEmit) {
+        emit StartGame();
+    }
+
+    gameFuture = QtConcurrent::run([this, shouldEmit, thinkMs]() {
         game = Game();
         while (!game.DetectivesWon() && !game.FugitiveWon()) {
             GameSnapshot snapshot = game.GetCurrentState();
@@ -28,17 +56,21 @@ void GameManager::SimulateGame()
                 game.MakeDetectiveMoves(detective.GetMoves(moveGenerator, snapshot));
             }
 
-            emit GamestateUpdated(game.GetCurrentState());
-            emit ScoreUpdated(game.GetDetectiveScore(), game.GetFugitiveScore());
-            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            if (shouldEmit) {
+                emit GamestateUpdated(game.GetCurrentState());
+                emit ScoreUpdated(game.GetDetectiveScore(), game.GetFugitiveScore());
+            }
+
+            if (thinkMs > 0) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(thinkMs));
+            }
         }
 
         gameSimulating = false;
-        qDebug() << "Game Is Over";
-        if (game.DetectivesWon())
-            qDebug() << "Detectives Won";
-        if (game.FugitiveWon())
-            qDebug() << "Fugitives Won";
+        GameResult result;
+        result.fugitiveWon = game.FugitiveWon();
+        result.snapshots = game.GetGameStates();
+        return result;
     });
 
 }
