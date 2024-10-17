@@ -23,25 +23,33 @@ def test(network, test_loader, loss_function, device):
   network.eval() #updates any network layers that behave differently in training and execution
   avg_loss = 0
   num_batches = 0
+  correct = 0
+  total = 0
   with torch.no_grad():
     for data, length, target in test_loader:
       data, length, target = data.to(device), length.to(device), target.to(device)
       output = network(data, length)
       loss = loss_function(output, target, length)
       avg_loss += loss.item()
+      
+      pred = output.data.max(2, keepdim=True)[1]
+      correct += pred.eq(target.data.view_as(pred)).sum()
+      total += length.sum()
       num_batches += 1
   
+  accuracy = correct / total * 100.0
+  #print(f"Accuracy: {correct}/{total} ({correct / total * 100.0:.1f}%)")
   avg_loss /= num_batches
   
   #print('\nTest set: Avg. loss: {:.4f})\n'.format(test_loss))
-  return avg_loss
+  return avg_loss, accuracy
 
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
-def logResults(epoch, num_epochs, train_loss, test_loss, print_interval=1000, should_output=True):
+def logResults(epoch, num_epochs, train_loss, test_loss, accuracy, print_interval=1000, should_output=True):
   if should_output and (epoch%print_interval == 0):  
-    print('Epoch [%d/%d], Train Loss: %.4f, Test Loss: %.4f' %(epoch+1, num_epochs, train_loss, test_loss))
+    print('Epoch [%d/%d], Train Loss: %.4f, Test Loss: %.4f, Accuracy %.1f%%' %(epoch+1, num_epochs, train_loss, test_loss, accuracy))
 
 def graphLoss(epoch_counter, train_loss_hist, test_loss_hist, loss_name="Loss", start = 0, graph_y_range=None, title=""):
   fig = plt.figure()
@@ -66,9 +74,9 @@ def trainAndGraph(network, training_generator, testing_generator, loss_function,
   
   for epoch in range(num_epochs):
     avg_loss = train(network, training_generator, loss_function, optimizer, device, should_output=should_output)
-    test_loss = test(network, testing_generator, loss_function, device)
+    test_loss, accuracy = test(network, testing_generator, loss_function, device)
     scheduler.step(test_loss)
-    logResults(epoch, num_epochs, avg_loss, test_loss, logging_interval, should_output)
+    logResults(epoch, num_epochs, avg_loss, test_loss, accuracy, logging_interval, should_output)
     
     train_loss_history.append(avg_loss)
     test_loss_history.append(test_loss)

@@ -8,7 +8,7 @@ class Model_MapPredict(nn.Module):
     def __init__(self, input_size, num_layers, hidden_size):
         super().__init__()
         
-        self.rnn = nn.LSTM(input_size=input_size, hidden_size=hidden_size, num_layers=num_layers, batch_first=True)
+        self.rnn = nn.RNN(input_size=input_size, hidden_size=hidden_size, num_layers=num_layers, batch_first=True)
         self.linear = nn.Linear(hidden_size, NUM_POINTS)
         
     def forward(self, x, lengths):

@@ -26,7 +26,8 @@ if __name__ == "__main__":
             if request == "train":
                 inputs, outputs = ParseLocationPredictionFile("nn/models/" + filebase + ".txt")
                 loss = TrainMap(inputs, outputs, filebase + "_map")
-                connection.send(struct.pack('f', loss))
+                print(f"Loss: {loss}")
+                connection.send(f"{loss}".encode("utf-8"))
             
             #connection.send(b"Hello, Client")
         except Exception as e:
