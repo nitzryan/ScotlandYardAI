@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <fstream>
 
+#include "Shared.h"
+
 // #pragma comment(lib, "Ws2_32.lib")
 
 const int PORT=3456;
@@ -90,7 +92,7 @@ float ModelSocket::TrainModel(std::vector<std::vector<std::vector<unsigned char>
 
     // Send to server file info
     int iResult;
-    std::string request = "train," + name;
+    std::string request = "train_map," + name;
 
     if (request.length() > BUFLEN) {
         return 1000000.f;
@@ -114,4 +116,55 @@ float ModelSocket::TrainModel(std::vector<std::vector<std::vector<unsigned char>
     }
 
     return 10000.0f;
+}
+
+std::vector<float> ModelSocket::GetTileProbabilities(std::vector<std::vector<unsigned char> > gameSnapshotTensor, std::string name)
+{
+    // This will only be generated on user request, so just use same filename
+    // Write data to file
+    std::string filename = "nn/models/user_map_pred.txt";
+    std::ofstream file(filename.c_str(), std::ios::binary);
+    if (!file) {
+        return {};
+    }
+    for (size_t i = 0; i < gameSnapshotTensor.size(); i++) {
+        for (auto& c : gameSnapshotTensor[i]) {
+            file << c;
+        }
+        file << (unsigned char)254;
+    }
+    file << (unsigned char)255;
+    file.close();
+
+    // Send to server file info
+    int iResult;
+    std::string request = "get_map," + name;
+    if (request.length() > BUFLEN) {
+        return {};
+    }
+    const char* sendMsg = request.c_str();
+    iResult = send(connectSocket, sendMsg, (int)strlen(sendMsg), 0);
+    if (iResult == SOCKET_ERROR) {
+        qDebug() << "Send Msg Failed " << WSAGetLastError();
+        return {};
+    }
+
+    // Get back test loss from model
+    char recvBuf[BUFLEN];
+    std::vector<float> probabilities;
+    probabilities.reserve(NUM_POINTS);
+    while (true) {
+        iResult = recv(connectSocket, recvBuf, BUFLEN, 0);
+        if (iResult > 0) {
+            try {
+                float prob = std::stof(recvBuf);
+                probabilities.push_back(prob);
+            } catch (...) {
+                return probabilities;
+            }
+        }
+    }
+
+
+    return {};
 }

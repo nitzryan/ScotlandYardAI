@@ -18,6 +18,8 @@ public:
 public slots:
     void SimulateGame(bool shouldEmit, int thinkMs);
     void TrainModel(std::string modelName, int generations, int gamesPerGeneration);
+
+    void SnapshotSelected(GameSnapshot snapshot);
 signals:
     void GamestateUpdated(GameSnapshot snapshot);
     void ScoreUpdated(float detectiveScore, float fugitiveScore);

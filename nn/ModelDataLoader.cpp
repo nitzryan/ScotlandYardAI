@@ -76,6 +76,17 @@ float ModelDataLoader::Train(std::vector<std::vector<GameSnapshot> > games, std:
     return socket->TrainModel(gameMapSnapshots, fugitiveLocations, fugitivesWon, name);
 }
 
+std::vector<float> ModelDataLoader::GetTileProbabilities(std::vector<GameSnapshot> gameSnapshot, std::string name) const
+{
+    std::vector<std::vector<unsigned char>> gameSnapshotTensor;
+    gameSnapshotTensor.reserve(gameSnapshot.size());
+    for (auto& s : gameSnapshot) {
+        gameSnapshotTensor.push_back(GenerateMapPredInput(s));
+    }
+
+    return socket->GetTileProbabilities(gameSnapshotTensor, name);
+}
+
 // GameMove ModelDataLoader::GetFugitiveMove(const GameSnapshot &snapshot) const
 // {
 

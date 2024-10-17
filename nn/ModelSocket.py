@@ -3,8 +3,11 @@ import sys
 import struct
 import traceback
 
-from InputParser import ParseLocationPredictionFile
+from InputParser import *
 from Model_Training import TrainMap
+from GenerateProbMap import GenerateProbMap
+
+file_location = "nn/models/"
 
 if __name__ == "__main__":
     print("Hello, World")
@@ -23,12 +26,18 @@ if __name__ == "__main__":
             request, filebase = data.decode("utf-8").split(",")
             print(f"Request {request} for file {filebase}")
             
-            if request == "train":
-                inputs, outputs = ParseLocationPredictionFile("nn/models/" + filebase + ".txt")
+            if request == "train_map":
+                inputs, outputs = ParseLocationPredictionFile(file_location + filebase + ".txt")
                 loss = TrainMap(inputs, outputs, filebase + "_map")
                 print(f"Loss: {loss}")
                 connection.send(f"{loss}".encode("utf-8"))
             
+            elif request == "get_map":
+                inputs = ParseSingleLocationPrediction()
+                probs = GenerateProbMap(inputs, filebase)
+                for prob in probs:
+                    connection.send(f"{prob * 100:.1f}".encode("utf-8"))
+                connection.send("!".encode("utf-8"))
             #connection.send(b"Hello, Client")
         except Exception as e:
             print(e)

@@ -14,6 +14,7 @@ public:
     ModelSocket();
     ~ModelSocket();
     float TrainModel(std::vector<std::vector<std::vector<unsigned char>>> gameMapPred, std::vector<std::vector<unsigned char>> fugitiveLocations, std::vector<bool> fugitivesWon, std::string name);
+    std::vector<float> GetTileProbabilities(std::vector<std::vector<unsigned char>> gameSnapshotTensor, std::string name);
     // GameMove GetFugitiveMove(std::vector<unsigned char> snapshot);
     // std::vector<GameMove> GetDetectiveMoves(std::vector<unsigned char> snapshot);
 private:

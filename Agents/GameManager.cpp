@@ -34,6 +34,25 @@ void GameManager::TrainModel(std::string modelName, int generations, int gamesPe
     emit TrainingComplete();
 }
 
+void GameManager::SnapshotSelected(GameSnapshot snapshot)
+{
+    std::vector<GameSnapshot> snapshots = game.GetGameStates();
+    std::vector<GameSnapshot> snapshotsUntilSelected;
+    for (auto& i : snapshots) {
+        if (i == snapshot) {
+            snapshotsUntilSelected.push_back(i);
+            break;
+        }
+        snapshotsUntilSelected.push_back(i);
+    }
+
+    std::vector<float> probabilities = dataLoader.GetTileProbabilities(snapshotsUntilSelected, "default_g0");
+    qDebug() << "Tile Probabilities";
+    for (int i = 0; i < probabilities.size(); i++) {
+        qDebug() << "Tile " << i + 1 << " : " << probabilities[i];
+    }
+}
+
 void GameManager::SimulateGame(bool shouldEmit, int thinkMs)
 {
     if (gameSimulating) {

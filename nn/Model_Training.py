@@ -6,6 +6,9 @@ from Dataset import MapDataset
 from Models import Model_MapPredict, RNN_Classification_Loss
 from Model_TrainingLoop import trainAndGraph
 
+MAP_HIDDEN_SIZE = 300
+MAP_LAYERS = 3
+
 def TrainMap(map_inputs, map_outputs, model_name):
     torch.set_printoptions(threshold=float('inf'))
     
@@ -13,6 +16,13 @@ def TrainMap(map_inputs, map_outputs, model_name):
     means = torch.mean(map_inputs_onelist, dim=0)
     stds = torch.std(map_inputs_onelist, dim=0)
     stds = torch.where(stds == 0, torch.tensor(1), stds)
+    with open("nn/models/" + model_name + "_meanstds.txt", "w") as file:
+        for i in range(means.size(0)):
+            file.write(f"{means[i]} ")
+        file.write("\n")
+        for i in range(stds.size(0)):
+            file.write(f"{stds[i]} ")
+    
     map_inputs = [(el - means) / stds for el in map_inputs]
     
     x_train, x_test, y_train, y_test = train_test_split(map_inputs, map_outputs, test_size=0.25, random_state=4980)
@@ -38,8 +48,8 @@ def TrainMap(map_inputs, map_outputs, model_name):
         device = torch.device("cpu")
     
     input_size = x_train_padded.size(2)
-    num_layers = 3
-    hidden_size = 300
+    num_layers = MAP_LAYERS
+    hidden_size = MAP_HIDDEN_SIZE
     network = Model_MapPredict(input_size, num_layers, hidden_size)
     network = network.to(device)
     

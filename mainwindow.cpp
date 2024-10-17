@@ -44,6 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     gameManager = new GameManager(moveGenerator);
 
+    // Shows the board connections, mainly for verifying the map for generating valid legal moves is correct
     connect(ui->cb_Stations, &QCheckBox::clicked, this, [this](bool checked) {
         ui->board->UpdateDrawCheck(checked, DRAW_OBJ::STATION);
     });
@@ -60,21 +61,26 @@ MainWindow::MainWindow(QWidget *parent)
         ui->board->UpdateDrawCheck(checked, DRAW_OBJ::FERRY);
     });
 
+    // Handles sending the gamestate from the GameManager to the UI components that show game state
     connect(gameManager, &GameManager::GamestateUpdated, ui->board, &GameBoard::GamestateUpdated);
     connect(gameManager, &GameManager::GamestateUpdated, ui->gamestateWidget, &GameSnapshotWidget::UpdateSnapshot);
     connect(gameManager, &GameManager::GamestateUpdated, ui->gameHistory, &GameHistory::AddSnapshot);
-    //connect(ui->pb_StartGame, &QPushButton::clicked, gameManager, &GameManager::SimulateGame);
+
+    // Handles starting the game and what data should be shown when sent from the game manager
     connect(ui->pb_StartGame, &QPushButton::clicked, this, [this]() {
         gameManager->SimulateGame(true, 250);
     });
     connect(ui->cb_FugitiveAlways, &QCheckBox::clicked, ui->gamestateWidget, &GameSnapshotWidget::SetShowX);
     connect(ui->cb_FugitiveAlways, &QCheckBox::clicked, ui->gameHistory, &GameHistory::ShowFugitiveLocation);
 
+    // Handles showing the win probability for both players
     connect(gameManager, &GameManager::StartGame, ui->gameHistory, &GameHistory::ClearGame);
     connect(gameManager, &GameManager::ScoreUpdated, ui->scoreWidget, &ScoreWidget::UpdateWinChance);
 
+    // Handles showing data when the game history is updated
     connect(ui->gameHistory, &GameHistory::SnapshotSelected, ui->board, &GameBoard::GamestateUpdated);
     connect(ui->gameHistory, &GameHistory::SnapshotSelected, ui->gamestateWidget, &GameSnapshotWidget::UpdateSnapshot);
+    connect(ui->gameHistory, &GameHistory::SnapshotSelected, gameManager, &GameManager::SnapshotSelected);
 
     // Train Models
     connect(ui->trainingWidget, &TrainingWidget::TrainingStarted, gameManager, &GameManager::TrainModel);

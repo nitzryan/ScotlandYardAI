@@ -36,3 +36,21 @@ def ParseLocationPredictionFile(filename):
                 this_input.append(byte)
     
     return all_inputs, all_outputs
+
+def ParseSingleLocationPrediction():
+    game_inputs = []
+    this_inputs = []
+    with open("nn/models/user_map_pred.txt", "rb") as file:
+        while True:
+            byte = file.read(1)
+            byte = int.from_bytes(byte, byteorder='big')
+            
+            if byte == 255:
+                break
+            elif byte == 254:
+                game_inputs.append(torch.tensor(this_inputs, dtype=torch.float32))
+                this_inputs = []
+            else:
+                this_inputs.append(byte)
+                
+    return game_inputs

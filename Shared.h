@@ -40,6 +40,12 @@ struct GameSnapshot {
     unsigned char fugMove;
     bool isFugitiveMove;
     bool wasFugitiveMove;
+
+    // The equality operator assumes they are from the same gamee
+    bool operator==(const GameSnapshot& b) {
+        return turn == b.turn
+               && (isFugitiveMove == b.isFugitiveMove);
+    }
 };
 
 enum class GameMovesType : unsigned char {
