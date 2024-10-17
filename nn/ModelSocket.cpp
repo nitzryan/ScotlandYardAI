@@ -11,7 +11,7 @@ const int BUFLEN = 256;
 
 ModelSocket::ModelSocket() {
     // Spawn Python Server
-    std::string python_init_string = "start python3 nn/ModelSocket.py " + std::to_string(PORT);
+    std::string python_init_string = "start cmd /k python3 nn/ModelSocket.py " + std::to_string(PORT);
     int r = std::system(python_init_string.c_str());
 
     // Connect to Python Server
@@ -79,12 +79,13 @@ float ModelSocket::TrainModel(std::vector<std::vector<std::vector<unsigned char>
             for (auto& c : gameMapPred[i][j]) {
                 file << c;
             }
-            file << (unsigned char)253;
+            file << (unsigned char)252;
             file << fugitiveLocations[i][j];
-            file << (unsigned char)254;
+            file << (unsigned char)253;
         }
-        file << (unsigned char)255;
+        file << (unsigned char)254;
     }
+    file << (unsigned char)255;
     file.close();
 
     // Send to server file info

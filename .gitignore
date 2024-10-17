@@ -3,3 +3,4 @@
 Users*
 nn/models/
 __pycache__/
+*.pt

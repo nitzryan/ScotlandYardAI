@@ -14,7 +14,6 @@ def train(network,  data_generator, loss_function, optimizer, device, logging = 
     optimizer.step()
     avg_loss += loss.item()
     num_batches += 1
-    if should_output and ((batch+1)%logging == 0): print('Batch [%d/%d], Train Loss: %.4f' %(batch+1, len(data_generator.dataset)/len(output), avg_loss/num_batches))
   
   avg_loss /= num_batches
   
@@ -66,17 +65,17 @@ def trainAndGraph(network, training_generator, testing_generator, loss_function,
   epochsSinceLastImprove = 0
   
   for epoch in range(num_epochs):
-    avg_loss = train(network, training_generator, loss_function, optimizer, should_output=should_output)
-    test_loss = test(network, testing_generator, loss_function)
-    scheduler.step(test_loss[0])
+    avg_loss = train(network, training_generator, loss_function, optimizer, device, should_output=should_output)
+    test_loss = test(network, testing_generator, loss_function, device)
+    scheduler.step(test_loss)
     logResults(epoch, num_epochs, avg_loss, test_loss, logging_interval, should_output)
     
     train_loss_history.append(avg_loss)
     test_loss_history.append(test_loss)
     epoch_counter.append(epoch)
     
-    if (test_loss[0] < best_loss):
-      best_loss = test_loss[0]
+    if (test_loss < best_loss):
+      best_loss = test_loss
       best_epoch = epoch
       torch.save(network.state_dict(), model_name)
       epochsSinceLastImprove = 0
