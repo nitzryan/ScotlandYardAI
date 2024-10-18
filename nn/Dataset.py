@@ -10,6 +10,7 @@ class MapDataset(torch.utils.data.Dataset):
         with warnings.catch_warnings(): # Get warning for data copy, which is okay since this is only run once
             warnings.filterwarnings("ignore", category=UserWarning, message='.*non-contiguous.*')
             self.fugitive_tile = labels
+            #self.fugitive_tile = torch.nn.functional.one_hot(labels, NUM_POINTS).to(D_TYPE)
         
     def __len__(self):
         return self.data.size(dim=0)

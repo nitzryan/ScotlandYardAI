@@ -2,8 +2,10 @@
 #include "ModelSocket.h"
 #include <assert.h>
 
-const int MAP_PRED_FUG_SIZE = 9;
-const int MAP_PRED_DET_SIZE = 4;
+// const int MAP_PRED_FUG_SIZE = 9;
+// const int MAP_PRED_DET_SIZE = 4;
+const int MAP_PRED_FUG_SIZE = 4;
+const int MAP_PRED_DET_SIZE = 1;
 const int MAP_PRED_SIZE = MAP_PRED_FUG_SIZE + NUM_DETECTIVES * MAP_PRED_DET_SIZE;
 
 std::vector<unsigned char> GenerateMapPredInput(const GameSnapshot& snapshot) {
@@ -12,11 +14,11 @@ std::vector<unsigned char> GenerateMapPredInput(const GameSnapshot& snapshot) {
     mapInputData[0] = snapshot.turn;
     mapInputData[1] = snapshot.fugMove & ~(unsigned char)GameMovesType::DOUBLE;
     mapInputData[2] = snapshot.isFugitiveMove;
-    mapInputData[3] = snapshot.fugTaxis;
-    mapInputData[4] = snapshot.fugBuses;
-    mapInputData[5] = snapshot.fugUndergrounds;
-    mapInputData[6] = snapshot.fugMysteries;
-    mapInputData[7] = snapshot.fugDoubles;
+    //mapInputData[3] = snapshot.fugTaxis;
+    //mapInputData[4] = snapshot.fugBuses;
+    //mapInputData[5] = snapshot.fugUndergrounds;
+    //mapInputData[6] = snapshot.fugMysteries;
+    //mapInputData[7] = snapshot.fugDoubles;
 
     if (snapshot.turn == REVEAL_TURN_1 ||
         snapshot.turn == REVEAL_TURN_2 ||
@@ -28,16 +30,16 @@ std::vector<unsigned char> GenerateMapPredInput(const GameSnapshot& snapshot) {
         snapshot.fugSquare == snapshot.detSquare[3] ||
         snapshot.fugSquare == snapshot.detSquare[4]) {
 
-        mapInputData[9] = snapshot.fugSquare;
+        mapInputData[3] = snapshot.fugSquare;
     } else {
-        mapInputData[9] = 240;
+        mapInputData[3] = 240;
     }
 
     for (int i = 0; i < NUM_DETECTIVES; i++) {
         mapInputData[MAP_PRED_FUG_SIZE + MAP_PRED_DET_SIZE * i] = snapshot.detSquare[i];
-        mapInputData[MAP_PRED_FUG_SIZE + MAP_PRED_DET_SIZE * i + 1] = snapshot.detTaxis[i];
-        mapInputData[MAP_PRED_FUG_SIZE + MAP_PRED_DET_SIZE * i + 2] = snapshot.detBuses[i];
-        mapInputData[MAP_PRED_FUG_SIZE + MAP_PRED_DET_SIZE * i + 3] = snapshot.detUndergrounds[i];
+        //mapInputData[MAP_PRED_FUG_SIZE + MAP_PRED_DET_SIZE * i + 1] = snapshot.detTaxis[i];
+        //mapInputData[MAP_PRED_FUG_SIZE + MAP_PRED_DET_SIZE * i + 2] = snapshot.detBuses[i];
+        //mapInputData[MAP_PRED_FUG_SIZE + MAP_PRED_DET_SIZE * i + 3] = snapshot.detUndergrounds[i];
     }
 
     return mapInputData;

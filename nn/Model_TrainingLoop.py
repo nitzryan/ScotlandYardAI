@@ -33,8 +33,11 @@ def test(network, test_loader, loss_function, device):
       avg_loss += loss.item()
       
       pred = output.data.max(2, keepdim=True)[1]
-      correct += pred.eq(target.data.view_as(pred)).sum()
-      total += length.sum()
+      for n in range(pred.size(0)):
+        l = length[n].item()
+        valid_pred = pred[n,:l,:]
+        correct += valid_pred.eq(target[n,:l].data.view_as(valid_pred)).sum()
+        total += l
       num_batches += 1
   
   accuracy = correct / total * 100.0

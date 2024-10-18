@@ -71,6 +71,7 @@ ModelSocket::~ModelSocket()
 float ModelSocket::TrainModel(std::vector<std::vector<std::vector<unsigned char>> > gameMapPred, std::vector<std::vector<unsigned char>> fugitiveLocations, std::vector<bool> fugitivesWon, std::string name)
 {
     // Write data to file
+
     std::string filename = "nn/models/" + name + ".txt";
     std::ofstream file(filename.c_str(), std::ios::binary);
     if (!file) {

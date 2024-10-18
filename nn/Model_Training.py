@@ -3,11 +3,11 @@ from sklearn.model_selection import train_test_split # type: ignore
 from torch.optim import lr_scheduler
 
 from Dataset import MapDataset
-from Models import Model_MapPredict, RNN_Classification_Loss
+from Models import Model_MapPredict, RNN_Classification_Loss, L1_Classification_Loss
 from Model_TrainingLoop import trainAndGraph
 
-MAP_HIDDEN_SIZE = 300
-MAP_LAYERS = 3
+MAP_HIDDEN_SIZE = 600
+MAP_LAYERS = 4
 
 def TrainMap(map_inputs, map_outputs, model_name):
     torch.set_printoptions(threshold=float('inf'))
@@ -53,11 +53,12 @@ def TrainMap(map_inputs, map_outputs, model_name):
     network = Model_MapPredict(input_size, num_layers, hidden_size)
     network = network.to(device)
     
-    optimizer = torch.optim.Adam(network.parameters(), lr=0.002)
-    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.5, patience=20, cooldown=5, verbose=False)
+    optimizer = torch.optim.Adam(network.parameters(), lr=0.001)
+    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.8, patience=20, cooldown=5, verbose=False)
     loss_function = RNN_Classification_Loss
+    #loss_function = L1_Classification_Loss
     
-    num_epochs = 400
+    num_epochs = 4000
     loss = trainAndGraph(network, 
                          train_generator, 
                          test_generator, 
@@ -66,8 +67,8 @@ def TrainMap(map_inputs, map_outputs, model_name):
                          scheduler, 
                          num_epochs, 
                          device,
-                         logging_interval=1, 
-                         early_stopping_cutoff=40, 
+                         logging_interval=10, 
+                         early_stopping_cutoff=200, 
                          should_output=True,
                          model_name="nn/models/" + model_name + ".pt")
     return loss

@@ -15,13 +15,10 @@ def GenerateProbMap(inputs, filebase):
     stds = torch.tensor(stds_list)
     input_normalized = [(el - means) / stds for el in input_stacked]
     input_tensor = torch.stack(input_normalized)
-    print(input_tensor.shape)
     input_tensor = input_tensor.unsqueeze(0)
-    print(input_tensor.shape)
     
     lengths = torch.tensor(input_tensor.size(1))
     lengths = lengths.unsqueeze(0)
-    print(lengths.shape)
     
     device = torch.device("cpu")
     network = Model_MapPredict(input_tensor.size(2), MAP_LAYERS, MAP_HIDDEN_SIZE)
@@ -30,11 +27,7 @@ def GenerateProbMap(inputs, filebase):
     network = network.to(device)
     
     probs = network(input_tensor, lengths)
-    print(probs.shape)
     probs = probs.squeeze(0)
-    print(probs.shape)
     probs = torch.nn.functional.softmax(probs, dim=1)
-    print(probs.shape)
     probs = probs[-1,:]
-    print(probs.shape)
-    return probs
+    return probs[1:]
