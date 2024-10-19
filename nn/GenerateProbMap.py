@@ -26,7 +26,8 @@ def GenerateProbMap(inputs, filebase):
     network.eval()
     network = network.to(device)
     
-    probs = network(input_tensor, lengths)
+    with torch.no_grad():
+        probs = network(input_tensor, lengths)
     probs = probs.squeeze(0)
     probs = torch.nn.functional.softmax(probs, dim=1)
     probs = probs[-1,:]

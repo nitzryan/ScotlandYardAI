@@ -22,6 +22,7 @@ public slots:
     void SnapshotSelected(GameSnapshot snapshot);
 signals:
     void GamestateUpdated(GameSnapshot snapshot);
+    void FugitiveProbabilitiesUpdated(std::vector<float> probabilities);
     void ScoreUpdated(float detectiveScore, float fugitiveScore);
     void StartGame();
 

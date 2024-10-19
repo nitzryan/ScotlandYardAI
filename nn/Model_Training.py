@@ -53,7 +53,7 @@ def TrainMap(map_inputs, map_outputs, model_name):
     network = Model_MapPredict(input_size, num_layers, hidden_size)
     network = network.to(device)
     
-    optimizer = torch.optim.Adam(network.parameters(), lr=0.001)
+    optimizer = torch.optim.Adam(network.parameters(), lr=0.0004)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.8, patience=20, cooldown=5, verbose=False)
     loss_function = RNN_Classification_Loss
     #loss_function = L1_Classification_Loss
@@ -68,7 +68,7 @@ def TrainMap(map_inputs, map_outputs, model_name):
                          num_epochs, 
                          device,
                          logging_interval=10, 
-                         early_stopping_cutoff=200, 
+                         early_stopping_cutoff=100, 
                          should_output=True,
                          model_name="nn/models/" + model_name + ".pt")
     return loss

@@ -103,6 +103,19 @@ void GameBoard::UpdateDrawCheck(bool checked, DRAW_OBJ obj)
 void GameBoard::GamestateUpdated(GameSnapshot s)
 {
     snapshot = s;
+    probabilities = {};
+    repaint();
+}
+
+void GameBoard::ProbabilityMapUpdated(std::vector<float> probs)
+{
+    probabilities = probs;
+    repaint();
+}
+
+void GameBoard::ShouldDrawTokens(bool shouldDraw)
+{
+    drawTokens = shouldDraw;
     repaint();
 }
 
@@ -202,26 +215,42 @@ void GameBoard::paintEvent(QPaintEvent* event) {
     // Draw Gamestate
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
-    if (snapshot.turn != INVALID_SNAPSHOT_TURN) {
-        pen.setColor(Qt::white);
-        brush.setColor(Qt::white);
-        painter.setPen(pen);
-        painter.setBrush(brush);
 
-        QPointF& p = points[snapshot.fugSquare - 1];
-        painter.drawEllipse(QPoint(p.x() * w, p.y() * h), r, r);
+    if (drawTokens) {
+        if (snapshot.turn != INVALID_SNAPSHOT_TURN) {
+            pen.setColor(Qt::white);
+            brush.setColor(Qt::white);
+            painter.setPen(pen);
+            painter.setBrush(brush);
+
+            QPointF& p = points[snapshot.fugSquare - 1];
+            painter.drawEllipse(QPoint(p.x() * w, p.y() * h), r, r);
+        }
+
+        r *= 0.9;
+        if (snapshot.turn != INVALID_SNAPSHOT_TURN) {
+            pen.setColor(QColor(128,255,0));
+            brush.setColor(QColor(128,255,0));
+            painter.setPen(pen);
+            painter.setBrush(brush);
+
+            for (size_t i = 0; i < NUM_DETECTIVES; i++) {
+                QPointF& p = points[snapshot.detSquare[i] - 1];
+                painter.drawEllipse(QPoint(p.x() * w, p.y() * h), r, r);
+            }
+        }
     }
 
-    r *= 0.9;
-    if (snapshot.turn != INVALID_SNAPSHOT_TURN) {
-        pen.setColor(QColor(128,255,0));
-        brush.setColor(QColor(128,255,0));
-        painter.setPen(pen);
-        painter.setBrush(brush);
-
-        for (size_t i = 0; i < NUM_DETECTIVES; i++) {
-            QPointF& p = points[snapshot.detSquare[i] - 1];
-            painter.drawEllipse(QPoint(p.x() * w, p.y() * h), r, r);
+    // Draw probabilities for where model thinks Mr X is
+    pen.setColor(Qt::blue);
+    brush.setColor(Qt::blue);
+    painter.setPen(pen);
+    painter.setBrush(brush);
+    for (size_t i = 0; i < probabilities.size(); i++) {
+        int r_prob = r * sqrt(probabilities[i]) / 10;
+        if (r_prob > 0) {
+            QPointF& p = points[i];
+            painter.drawEllipse(QPoint(p.x() * w, p.y() * h), r_prob, r_prob);
         }
     }
 }

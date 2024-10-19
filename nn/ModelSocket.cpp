@@ -3,13 +3,14 @@
 #include <string>
 #include <QDebug>
 #include <fstream>
+#include <sstream>
 
 #include "Shared.h"
 
 // #pragma comment(lib, "Ws2_32.lib")
 
 const int PORT=3456;
-const int BUFLEN = 256;
+const int BUFLEN = 4096;
 
 ModelSocket::ModelSocket() {
     // Spawn Python Server
@@ -157,12 +158,27 @@ std::vector<float> ModelSocket::GetTileProbabilities(std::vector<std::vector<uns
     while (true) {
         iResult = recv(connectSocket, recvBuf, BUFLEN, 0);
         if (iResult > 0) {
-            try {
-                float prob = std::stof(recvBuf);
-                probabilities.push_back(prob);
-            } catch (...) {
-                return probabilities;
+            std::stringstream ss(recvBuf);
+            std::string item;
+            while (std::getline(ss, item, ',')) {
+                try {
+                    float prob = std::stof(item);
+                    probabilities.push_back(prob);
+                } catch (...) {
+                    //qDebug() << recvBuf;
+                    qDebug() << probabilities.size();
+                    return probabilities;
+                }
             }
+
+            // try {
+            //     float prob = std::stof(recvBuf);
+            //     probabilities.push_back(prob);
+            // } catch (...) {
+            //     //qDebug() << recvBuf;
+            //     qDebug() << probabilities.size();
+            //     return probabilities;
+            // }
         }
     }
 

@@ -24,6 +24,8 @@ signals:
 
 public slots:
     void GamestateUpdated(GameSnapshot snapshot);
+    void ProbabilityMapUpdated(std::vector<float> probabilities);
+    void ShouldDrawTokens(bool shouldDraw);
 
 protected:
     void mousePressEvent(QMouseEvent* event) override;
@@ -37,7 +39,9 @@ private:
     bool drawStation, drawTaxi, drawBus, drawUnderground, drawFerry;
 
     // Draw gamestate
+    bool drawTokens;
     GameSnapshot snapshot;
+    std::vector<float> probabilities;
 };
 
 #endif // GAMEBOARD_H

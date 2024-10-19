@@ -18,7 +18,7 @@ if __name__ == "__main__":
     
     connection, address = serverSocket.accept()
     while True:
-        data = connection.recv(256)
+        data = connection.recv(4096)
         if not data:
             break
         
@@ -35,9 +35,11 @@ if __name__ == "__main__":
             elif request == "get_map":
                 inputs = ParseSingleLocationPrediction()
                 probs = GenerateProbMap(inputs, filebase)
+                probsStr = ""
                 for prob in probs:
-                    connection.send(f"{prob * 100:.1f}".encode("utf-8"))
-                connection.send("!".encode("utf-8"))
+                    probsStr += f"{prob * 100:.1f},"
+                probsStr += "!"
+                connection.send(probsStr.encode("utf-8"))
             #connection.send(b"Hello, Client")
         except Exception as e:
             print(e)

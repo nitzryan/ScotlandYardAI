@@ -142,13 +142,6 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_FugitiveCards">
-            <property name="text">
-             <string>Fugitive Cards</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QCheckBox" name="cb_DetectiveScore">
             <property name="text">
              <string>Detective Score</string>
@@ -156,9 +149,12 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_DetectiveCards">
+           <widget class="QCheckBox" name="cb_DrawTokens">
             <property name="text">
-             <string>Detective Cards</string>
+             <string>Draw Tokens</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>

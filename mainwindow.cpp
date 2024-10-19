@@ -65,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(gameManager, &GameManager::GamestateUpdated, ui->board, &GameBoard::GamestateUpdated);
     connect(gameManager, &GameManager::GamestateUpdated, ui->gamestateWidget, &GameSnapshotWidget::UpdateSnapshot);
     connect(gameManager, &GameManager::GamestateUpdated, ui->gameHistory, &GameHistory::AddSnapshot);
+    connect(gameManager, &GameManager::FugitiveProbabilitiesUpdated, ui->board, &GameBoard::ProbabilityMapUpdated);
 
     // Handles starting the game and what data should be shown when sent from the game manager
     connect(ui->pb_StartGame, &QPushButton::clicked, this, [this]() {
@@ -72,6 +73,7 @@ MainWindow::MainWindow(QWidget *parent)
     });
     connect(ui->cb_FugitiveAlways, &QCheckBox::clicked, ui->gamestateWidget, &GameSnapshotWidget::SetShowX);
     connect(ui->cb_FugitiveAlways, &QCheckBox::clicked, ui->gameHistory, &GameHistory::ShowFugitiveLocation);
+    connect(ui->cb_DrawTokens, &QCheckBox::clicked, ui->board, &GameBoard::ShouldDrawTokens);
 
     // Handles showing the win probability for both players
     connect(gameManager, &GameManager::StartGame, ui->gameHistory, &GameHistory::ClearGame);

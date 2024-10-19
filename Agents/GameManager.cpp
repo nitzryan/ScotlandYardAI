@@ -47,10 +47,11 @@ void GameManager::SnapshotSelected(GameSnapshot snapshot)
     }
 
     std::vector<float> probabilities = dataLoader.GetTileProbabilities(snapshotsUntilSelected, "default_g0");
-    qDebug() << "Tile Probabilities";
-    for (int i = 0; i < probabilities.size(); i++) {
-        qDebug() << "Tile " << i + 1 << " : " << probabilities[i];
-    }
+    emit FugitiveProbabilitiesUpdated(probabilities);
+    // qDebug() << "Tile Probabilities";
+    // for (int i = 0; i < probabilities.size(); i++) {
+    //     qDebug() << "Tile " << i + 1 << " : " << probabilities[i];
+    // }
 }
 
 void GameManager::SimulateGame(bool shouldEmit, int thinkMs)
