@@ -10,7 +10,8 @@ const int MAP_PRED_SIZE = MAP_PRED_FUG_SIZE + NUM_DETECTIVES * MAP_PRED_DET_SIZE
 
 const int SCORE_FUG_SIZE = 6;
 const int SCORE_DET_SIZE = 3;
-const int SCORE_SIZE = MAP_PRED_SIZE + SCORE_FUG_SIZE + NUM_DETECTIVES * SCORE_DET_SIZE;
+const int SCORE_TOTAL_DET_SIZE = SCORE_DET_SIZE * NUM_DETECTIVES;
+const int SCORE_SIZE = MAP_PRED_SIZE + SCORE_FUG_SIZE + SCORE_TOTAL_DET_SIZE;
 
 std::vector<unsigned char> GenerateMapPredInput(const GameSnapshot& snapshot) {
     std::vector<unsigned char> mapInputData(MAP_PRED_SIZE);
@@ -62,15 +63,15 @@ std::vector<unsigned char> GenerateScoreInput(const GameSnapshot& snapshot) {
         scoreData[MAP_PRED_SIZE + SCORE_DET_SIZE * i + 2] = snapshot.detUndergrounds[i];
     }
 
-    scoreData[MAP_PRED_SIZE + SCORE_DET_SIZE] = snapshot.fugTaxis;
-    scoreData[MAP_PRED_SIZE + SCORE_DET_SIZE + 1] = snapshot.fugBuses;
-    scoreData[MAP_PRED_SIZE + SCORE_DET_SIZE + 2] = snapshot.fugUndergrounds;
-    scoreData[MAP_PRED_SIZE + SCORE_DET_SIZE + 3] = snapshot.fugDoubles;
-    scoreData[MAP_PRED_SIZE + SCORE_DET_SIZE + 4] = snapshot.fugMysteries;
+    scoreData[MAP_PRED_SIZE + SCORE_TOTAL_DET_SIZE] = snapshot.fugTaxis;
+    scoreData[MAP_PRED_SIZE + SCORE_TOTAL_DET_SIZE + 1] = snapshot.fugBuses;
+    scoreData[MAP_PRED_SIZE + SCORE_TOTAL_DET_SIZE + 2] = snapshot.fugUndergrounds;
+    scoreData[MAP_PRED_SIZE + SCORE_TOTAL_DET_SIZE + 3] = snapshot.fugDoubles;
+    scoreData[MAP_PRED_SIZE + SCORE_TOTAL_DET_SIZE + 4] = snapshot.fugMysteries;
 
     // Only difference between detective and fugutive model is that
     // This will be hidden for the detectives but not the fugitives
-    scoreData[MAP_PRED_SIZE + SCORE_DET_SIZE + 5] = snapshot.fugSquare;
+    scoreData[MAP_PRED_SIZE + SCORE_TOTAL_DET_SIZE + 5] = snapshot.fugSquare;
 
     return scoreData;
 }

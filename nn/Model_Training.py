@@ -1,7 +1,6 @@
 import torch
 from sklearn.model_selection import train_test_split # type: ignore
 from torch.optim import lr_scheduler
-import copy
 
 from Dataset import MapDataset, ScoreDataset
 from Models import Model_MapPredict, Model_WinnerPredict, RNN_Classification_Loss
@@ -130,6 +129,7 @@ def TrainScore(x_map, x_score, results, filebase):
     all_xs = torch.cat(total_xs, dim=0)
     all_ys = torch.stack(all_ys)
     
+    # Train on data
     x_train, x_test, y_train, y_test = train_test_split(all_xs, all_ys, test_size=0.25, random_state=4980)
     train_dataset = ScoreDataset(x_train, y_train)
     test_dataset = ScoreDataset(x_test, y_test)

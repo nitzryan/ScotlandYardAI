@@ -91,6 +91,7 @@ class Model_WinnerPredict(nn.Module):
         self.linear5 = nn.Linear(8, 2)
         
     def forward(self, x):
+        x = x.reshape((x.size(0) * x.size(1), x.size(2)))
         x = F.relu(self.linear1(x))
         x = F.relu(self.linear2(x))
         x = F.relu(self.linear3(x))

@@ -7,6 +7,7 @@ def train(network,  data_generator, loss_function, optimizer, device, logging = 
   num_batches = 0
   for batch, (data, target) in enumerate(data_generator):
     data, target = data.to(device), target.to(device)
+    target = target.reshape((target.size(0) * target.size(1),))
     optimizer.zero_grad()
     output = network(data)
     loss = loss_function(output, target)
@@ -28,6 +29,7 @@ def test(network, test_loader, loss_function, device):
   with torch.no_grad():
     for data, target in test_loader:
       data, target = data.to(device), target.to(device)
+      target = target.reshape((target.size(0) * target.size(1),))
       output = network(data)
       loss = loss_function(output, target)
       avg_loss += loss.item()
