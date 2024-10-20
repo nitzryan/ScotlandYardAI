@@ -4,7 +4,7 @@ import struct
 import traceback
 
 from InputParser import *
-from Model_Training import TrainMap
+from Model_Training import TrainMap, TrainScore
 from GenerateProbMap import GenerateProbMap
 
 file_location = "nn/models/"
@@ -29,6 +29,12 @@ if __name__ == "__main__":
             if request == "train_map":
                 inputs, outputs = ParseLocationPredictionFile(file_location + filebase + ".txt")
                 loss = TrainMap(inputs, outputs, filebase + "_map")
+                print(f"Loss: {loss}")
+                connection.send(f"{loss}".encode("utf-8"))
+            
+            elif request == "train_score":
+                x_map, x_score, results = ParseGamePredictionFile(file_location + filebase + "_score.txt")
+                loss = TrainScore(x_map, x_score, results, filebase)
                 print(f"Loss: {loss}")
                 connection.send(f"{loss}".encode("utf-8"))
             

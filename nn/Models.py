@@ -28,7 +28,7 @@ class ResBlock(nn.Module):
 RECURRENT_INPUT_SIZE = 200
 
 class Model_MapPredict(nn.Module):
-    def __init__(self, input_size, num_layers, hidden_size):
+    def __init__(self, input_size):
         super().__init__()
         self.h_0 = torch.tensor([10 if is_start(x) else -10 for x in range(NUM_POINTS)], dtype=D_TYPE)
         
@@ -80,39 +80,24 @@ class Model_MapPredict(nn.Module):
 
         return output
     
-def L1_Classification_Loss(pred, actual, lengths):
-    pred = torch.nn.functional.softmax(pred, dim=2)
-    # Reshape into format required by CrossEntropyLoss
-    actual = actual[:,:pred.size(1)]
-    
-    batch_size = actual.size(0)
-    time_steps = actual.size(1)
-    
-    num_classes = pred.size(2)
-    
-    actual = actual.reshape((batch_size * time_steps, num_classes))
-    
-    pred = pred.reshape((batch_size * time_steps, num_classes))
-    l = nn.L1Loss(reduction='none')
-    loss = l(pred, actual)
-    
-    # Reshape back into format to apply mask for actual valid predictions
-    loss = loss.reshape((batch_size, time_steps, num_classes))
-    loss = loss.sum(dim=2)
-    
-    # Mask based off lenghts of actual predictions
-    batch_size, max_steps = loss.size()
-    mask = torch.arange(max_steps, device=lengths.device).unsqueeze(0) < lengths.unsqueeze(1)
-    masked_loss = loss * mask
-    
-    # Calculate average loss of each entry (although not sure if this is actually good)
-    #print(masked_loss)
-    loss_sums = masked_loss.sum(dim=1)
-    #print(loss_sums.shape)
-    lengths = lengths.float()
-    loss_mean = loss_sums / lengths.unsqueeze(1)
-    
-    return loss_mean.mean()
+class Model_WinnerPredict(nn.Module):
+    def __init__(self, input_size):
+        super().__init__()
+        
+        self.linear1 = nn.Linear(input_size, NUM_POINTS // 2)
+        self.linear2 = nn.Linear(NUM_POINTS // 2, NUM_POINTS // 4)
+        self.linear3 = nn.Linear(NUM_POINTS // 4, NUM_POINTS // 8)
+        self.linear4 = nn.Linear(NUM_POINTS // 8, 8)
+        self.linear5 = nn.Linear(8, 2)
+        
+    def forward(self, x):
+        x = F.relu(self.linear1(x))
+        x = F.relu(self.linear2(x))
+        x = F.relu(self.linear3(x))
+        x = F.relu(self.linear4(x))
+        x = self.linear5(x)
+        
+        return x
     
 def RNN_Classification_Loss(pred, actual, lengths):
     # Reshape into format required by CrossEntropyLoss

@@ -5,11 +5,11 @@ def train(network,  data_generator, loss_function, optimizer, device, logging = 
   network.train() #updates any network layers that behave differently in training and execution
   avg_loss = 0
   num_batches = 0
-  for batch, (data, target) in enumerate(data_generator):
-    data, target = data.to(device), target.to(device)
+  for batch, (data, length, target) in enumerate(data_generator):
+    data, length, target = data.to(device), length.to(device), target.to(device)
     optimizer.zero_grad()
-    output = network(data)
-    loss = loss_function(output, target)
+    output = network(data, length)
+    loss = loss_function(output, target, length)
     loss.backward()
     optimizer.step()
     avg_loss += loss.item()
@@ -26,14 +26,18 @@ def test(network, test_loader, loss_function, device):
   correct = 0
   total = 0
   with torch.no_grad():
-    for data, target in test_loader:
-      data, target = data.to(device), target.to(device)
-      output = network(data)
-      loss = loss_function(output, target)
+    for data, length, target in test_loader:
+      data, length, target = data.to(device), length.to(device), target.to(device)
+      output = network(data, length)
+      loss = loss_function(output, target, length)
       avg_loss += loss.item()
-      pred = output.data.max(1, keepdim=True)[1]
-      correct += pred.eq(target.data.view_as(pred)).sum()
-      total += pred.size(0)
+      
+      pred = output.data.max(2, keepdim=True)[1]
+      for n in range(pred.size(0)):
+        l = length[n].item()
+        valid_pred = pred[n,:l,:]
+        correct += valid_pred.eq(target[n,:l].data.view_as(valid_pred)).sum()
+        total += l
       num_batches += 1
   
   accuracy = correct / total * 100.0
@@ -61,7 +65,7 @@ def graphLoss(epoch_counter, train_loss_hist, test_loss_hist, loss_name="Loss", 
   plt.xlabel('#Epochs')
   plt.ylabel(loss_name)
 
-def trainAndGraph(network, training_generator, testing_generator, loss_function, optimizer, scheduler, num_epochs, device, logging_interval=1, early_stopping_cutoff=20, should_output=True, graph_y_range=None, model_name="no_name.pt"):
+def trainAndGraph_Lengths(network, training_generator, testing_generator, loss_function, optimizer, scheduler, num_epochs, device, logging_interval=1, early_stopping_cutoff=20, should_output=True, graph_y_range=None, model_name="no_name.pt"):
   #Arrays to store training history
   test_loss_history = []
   epoch_counter = []

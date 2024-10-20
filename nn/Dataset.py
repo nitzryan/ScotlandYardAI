@@ -15,9 +15,16 @@ class MapDataset(torch.utils.data.Dataset):
     def __len__(self):
         return self.data.size(dim=0)
     
-    def should_augment_data(self, should_augment):
-        self.should_augment = should_augment
-    
     def __getitem__(self, idx):
         return self.data[idx,:], self.lengths[idx], self.fugitive_tile[idx,:]
     
+class ScoreDataset(torch.utils.data.Dataset):
+    def __init__(self, data, labels):
+        self.data = data
+        self.labels = labels
+        
+    def __len__(self):
+        return self.data.size(dim=0)
+    
+    def __getitem__(self, idx):
+        return self.data[idx,:], self.labels[idx]

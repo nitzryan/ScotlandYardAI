@@ -69,32 +69,83 @@ ModelSocket::~ModelSocket()
     WSACleanup();
 }
 
-float ModelSocket::TrainModel(std::vector<std::vector<std::vector<unsigned char>> > gameMapPred, std::vector<std::vector<unsigned char>> fugitiveLocations, std::vector<bool> fugitivesWon, std::string name)
+float ModelSocket::TrainModel(std::vector<std::vector<std::vector<unsigned char>> > gameMapPred,
+                              std::vector<std::vector<std::vector<unsigned char>> > gameScores,
+                              std::vector<std::vector<unsigned char>> fugitiveLocations,
+                              std::vector<bool> fugitivesWon,
+                              std::string name)
 {
-    // Write data to file
+    // Write map prediction to file
 
-    std::string filename = "nn/models/" + name + ".txt";
-    std::ofstream file(filename.c_str(), std::ios::binary);
-    if (!file) {
+    // std::string filename = "nn/models/" + name + ".txt";
+    // std::ofstream file(filename.c_str(), std::ios::binary);
+    // if (!file) {
+    //     return 10000000.f;
+    // }
+    // for (size_t i = 0; i < gameMapPred.size(); i++) {
+    //     for (size_t j = 0; j < gameMapPred[i].size(); j++) {
+    //         for (auto& c : gameMapPred[i][j]) {
+    //             file << c;
+    //         }
+    //         file << (unsigned char)252;
+    //         file << fugitiveLocations[i][j];
+    //         file << (unsigned char)253;
+    //     }
+    //     file << (unsigned char)254;
+    // }
+    // file << (unsigned char)255;
+    // file.close();
+
+    // Write score prediction to file
+    std::string filename = "nn/models/" + name + "_score.txt";
+    std::ofstream file_score(filename.c_str(), std::ios::binary);
+    if (!file_score) {
         return 10000000.f;
     }
-    for (size_t i = 0; i < gameMapPred.size(); i++) {
-        for (size_t j = 0; j < gameMapPred[i].size(); j++) {
-            for (auto& c : gameMapPred[i][j]) {
-                file << c;
+    for (size_t i = 0; i < gameScores.size(); i++) {
+        for (size_t j = 0; j < gameScores[i].size(); j++) {
+            for (auto& c : gameScores[i][j]) {
+                file_score << c;
             }
-            file << (unsigned char)252;
-            file << fugitiveLocations[i][j];
-            file << (unsigned char)253;
+            file_score << (unsigned char)251;
         }
-        file << (unsigned char)254;
+        if (fugitivesWon[i]) {
+            file_score << (unsigned char)252;
+        } else {
+            file_score << (unsigned char)253;
+        }
+        file_score << (unsigned char)254;
     }
-    file << (unsigned char)255;
-    file.close();
+    file_score << (unsigned char)255;
+    file_score.close();
+
 
     // Send to server file info
     int iResult;
-    std::string request = "train_map," + name;
+    // std::string request = "train_map," + name;
+
+    // if (request.length() > BUFLEN) {
+    //     return 1000000.f;
+    // }
+    // const char* sendMsg = request.c_str();
+    // iResult = send(connectSocket, sendMsg, (int)strlen(sendMsg), 0);
+    // if (iResult == SOCKET_ERROR) {
+    //     qDebug() << "Send Msg Failed " << WSAGetLastError();
+    //     return 10000.0f;
+    // }
+
+    // // Get back test loss from model
+    // char recvBuf[BUFLEN];
+    // iResult = recv(connectSocket, recvBuf, BUFLEN, 0);
+    // if (iResult > 0) {
+    //     try {
+    //         return std::stof(recvBuf);
+    //     } catch (...) {
+    //         return 1000.0f;
+    //     }
+    // }
+
+    std::string request = "train_score," + name;
 
     if (request.length() > BUFLEN) {
         return 1000000.f;
