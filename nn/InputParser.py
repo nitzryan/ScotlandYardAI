@@ -92,3 +92,35 @@ def ParseGamePredictionFile(filename):
                 turn_score_inputs.append(byte)
     
     return all_mappred_inputs, all_score_inputs, all_results
+
+def ParseScoreRequestFile(filename):
+    all_inputs = []
+    game_inputs = [[], []]
+    this_move_input = []
+    this_map_inputs = []
+    building_map = True
+    with open(filename, "rb") as file:
+        while True:
+            byte = file.read(1)
+            byte = int.from_bytes(byte, byteorder='big')
+            
+            if byte == 255:
+                break
+            elif byte == 254:
+                all_inputs.append(game_inputs)
+                game_inputs = [[],[]]
+                building_map = True
+            elif byte == 253:
+                game_inputs[1].append(torch.tensor(this_move_input, dtype=torch.float32))
+                this_move_input = []
+            elif byte == 252:
+                game_inputs[0].append(torch.tensor(this_map_inputs), dtype=torch.float32)
+                this_map_inputs = []
+            elif byte == 251:
+                building_map = False
+            elif building_map:
+                this_map_inputs.append(byte)
+            else:
+                this_move_input.append(byte)
+                
+    return all_inputs

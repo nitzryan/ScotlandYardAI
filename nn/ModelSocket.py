@@ -46,6 +46,12 @@ if __name__ == "__main__":
                     probsStr += f"{prob * 100:.1f},"
                 probsStr += "!"
                 connection.send(probsStr.encode("utf-8"))
+                
+            elif request == "get_scores":
+                inputs = ParseScoreRequestFile(file_location + filebase + "_scorerequest.txt")
+                scores = GenerateScores(inputs, filebase)
+                return_val = WriteScores(scores, filebase)
+                connection.sent(f"{return_val}".encode("utf-8"))
             #connection.send(b"Hello, Client")
         except Exception as e:
             print(e)
